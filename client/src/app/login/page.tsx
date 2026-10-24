@@ -16,25 +16,12 @@ export default function LoginPage() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [copiedField, setCopiedField] = useState<'email' | 'password' | null>(null);
 
   const handleFillDemo = () => {
     setEmail('admin@doctortracker.com');
     setPassword('password123');
     setFieldErrors({});
     setGeneralError(null);
-  };
-
-  const handleCopy = async (text: string, field: 'email' | 'password') => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
-        setCopiedField(field);
-        setTimeout(() => setCopiedField(null), 2000);
-      }
-    } catch {
-      // Ignore clipboard write errors
-    }
   };
 
   // If already authenticated, redirect to dashboard
@@ -207,148 +194,52 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Security Note */}
-          <div className="note">
-            <Icon name="shield" size={16} />
-            <span>Secure access for authorized staff.</span>
-          </div>
-
-          {/* Admin Credentials Hint Box */}
+          {/* Quick Fill Demo Option */}
           <div
             style={{
-              marginTop: 20,
-              padding: '14px 16px',
-              borderRadius: 'var(--r)',
-              background: 'var(--sub)',
-              border: '1px solid var(--bd)',
-              fontSize: 13,
+              marginTop: 18,
+              paddingTop: 16,
+              borderTop: '1px solid var(--bd)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
             }}
           >
-            <div
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="btn"
               style={{
-                display: 'flex',
+                width: '100%',
+                minHeight: 40,
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--tx)',
+                background: 'var(--sub)',
+                border: '1px dashed var(--bd)',
+                cursor: 'pointer',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-                flexWrap: 'wrap',
-                gap: 8,
+                justifyContent: 'center',
+                gap: 6,
+                transition: 'background 0.15s ease, border-color 0.15s ease, color 0.15s ease',
               }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  fontWeight: 600,
-                  color: 'var(--tx)',
-                  fontSize: 12.5,
-                }}
-              >
-                <Icon name="shield" size={14} />
-                <span>Demo Admin Credentials</span>
-              </div>
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                style={{
-                  background: 'var(--pr)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: 'var(--r)',
-                  padding: '4px 10px',
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 4,
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-                  transition: 'opacity 0.15s ease',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.88')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                title="Auto-fill login credentials into form"
-              >
-                ⚡ Quick Fill
-              </button>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'auto 1fr auto',
-                gap: '8px 10px',
-                alignItems: 'center',
-                background: 'var(--card)',
-                padding: '10px 12px',
-                borderRadius: 'var(--r)',
-                border: '1px solid var(--bd)',
-                fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-                fontSize: 12,
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--pr)';
+                e.currentTarget.style.color = 'var(--pr)';
               }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--bd)';
+                e.currentTarget.style.color = 'var(--tx)';
+              }}
+              title="Auto-fill demo admin credentials"
             >
-              <span style={{ color: 'var(--mu)', fontWeight: 500 }}>Email:</span>
-              <span
-                style={{
-                  color: 'var(--tx)',
-                  fontWeight: 600,
-                  wordBreak: 'break-all',
-                  userSelect: 'all',
-                }}
-              >
-                admin@doctortracker.com
-              </span>
-              <button
-                type="button"
-                onClick={() => handleCopy('admin@doctortracker.com', 'email')}
-                style={{
-                  background: 'transparent',
-                  border: '1px solid var(--bd)',
-                  cursor: 'pointer',
-                  color: copiedField === 'email' ? 'var(--pr)' : 'var(--mu)',
-                  fontSize: 11,
-                  fontWeight: copiedField === 'email' ? 600 : 500,
-                  padding: '2px 8px',
-                  borderRadius: 4,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 3,
-                }}
-                title="Copy email"
-              >
-                {copiedField === 'email' ? '✓ Copied' : 'Copy'}
-              </button>
+              <Icon name="shield" size={15} />
+              <span>⚡ Quick Fill Demo Admin</span>
+            </button>
 
-              <span style={{ color: 'var(--mu)', fontWeight: 500 }}>Password:</span>
-              <span
-                style={{
-                  color: 'var(--tx)',
-                  fontWeight: 600,
-                  userSelect: 'all',
-                }}
-              >
-                password123
-              </span>
-              <button
-                type="button"
-                onClick={() => handleCopy('password123', 'password')}
-                style={{
-                  background: 'transparent',
-                  border: '1px solid var(--bd)',
-                  cursor: 'pointer',
-                  color: copiedField === 'password' ? 'var(--pr)' : 'var(--mu)',
-                  fontSize: 11,
-                  fontWeight: copiedField === 'password' ? 600 : 500,
-                  padding: '2px 8px',
-                  borderRadius: 4,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 3,
-                }}
-                title="Copy password"
-              >
-                {copiedField === 'password' ? '✓ Copied' : 'Copy'}
-              </button>
+            <div className="note" style={{ margin: 0, justifyContent: 'center' }}>
+              <span>Secure access for authorized healthcare staff.</span>
             </div>
           </div>
         </div>
